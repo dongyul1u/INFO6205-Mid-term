@@ -1,3 +1,6 @@
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.TreeVisitor;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -29,12 +32,38 @@ public class LargestLevelSum {
         // TODO: Implement the logic to find the maximum level sum of the given binary tree.
         Queue<TreeNode> queue = new LinkedList<>();
 
+        if(root == null)
+            return 0;
+
+        queue.add(root);
+        int max = Integer.MIN_VALUE;
+
         while (!queue.isEmpty()) {
             //TODO: Logic to process nodes at the current level will go here.
+            Queue<TreeNode> siblings = new LinkedList<>();
+            int sum = 0;
+            TreeNode temp = queue.poll();
+            siblings.add(temp);
+            while(!queue.isEmpty()){
+                TreeNode sibling = queue.poll();
+                siblings.add(sibling);
+                sum += sibling.val;
+            }
+            sum += temp.val;
+            if(max < sum)
+                max = sum;
+            //empty queue, refill with child
+            while(!siblings.isEmpty()){
+                TreeNode sibling = siblings.poll();
+                if(sibling.left != null)
+                    queue.add(sibling.left);
+                if(sibling.right != null)
+                    queue.add(sibling.right);
+            }
         }
 
         //TODO: Placeholder to return the max level sum; replace 0 with the correct value.
-        return 0;
+        return max;
     }
 
 
